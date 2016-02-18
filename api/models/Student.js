@@ -4,6 +4,7 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
+var Q = require('q');
 
 module.exports = {
 
@@ -28,7 +29,83 @@ module.exports = {
 		image: {
 			type: 'string',
 			required: true
-		}		
-	}
+		},
+		birthday: {
+			type: 'datetime',
+			required: true	
+		}	
+	},
+
+	getStudentList: function(sortOrder, offset, limit, search, customWhere) {
+
+		var column = Student.getColumn();
+        var query = {
+                skip: offset,
+                limit: limit,
+            }
+
+        if (sortOrder.hasOwnProperty('column') && sortOrder.hasOwnProperty('dir')) {
+            query.sort = column[sortOrder.column] + ' ' + sortOrder.dir;
+        }
+
+        if (search.trim() != '') {
+            query.where = {
+                'or': [{
+                            first_name: {'like' : '%' + search + '%'}
+                        },
+                        {
+                            last_name: {'like' : '%' + search + '%'}
+                    	},
+                        {
+                            email: {'like' : '%' + search + '%'}
+                    	},
+                        {
+                            birthday: {'like' : '%' + search + '%'}
+                    	}
+                    ]
+            };
+        }
+        if (customWhere) {
+            return this.find(query).where(customWhere);    
+        }
+        
+        return this.find(query);
+	},
+
+    getTotalRecords: function(search, customWhere) {
+        var query = {};
+
+        if (search.trim() != '') {
+            query.where = {
+                'or': [{
+                            first_name: {'like' : '%' + search + '%'}
+                        },
+                        {
+                            last_name: {'like' : '%' + search + '%'}
+                    	},
+                        {
+                            email: {'like' : '%' + search + '%'}
+                    	},
+                        {
+                            birthday: {'like' : '%' + search + '%'}
+                    	}
+                    ]
+            };
+        }
+        var Promise = Q.promise(function(resolve, reject) {
+            Student.find(query).where(customWhere)
+                .then(function(records) {
+                    resolve(records.length);
+                })
+                .catch(function(err) {
+                    reject(err);
+                })
+        });
+
+        return Promise;
+    },
+    getColumn: function() {
+        return ['first_name', 'last_name', 'email', 'image', 'birthday'];
+    },
 };
 

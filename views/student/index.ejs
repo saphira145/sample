@@ -1,0 +1,90 @@
+<div class="container wrapper-table">
+    <div class="col-xs-12">
+        <button class="btn btn-primary create-modal-student-button">Create Student</button>
+    </div>
+    
+	<div class="col-xs-12">
+		<table id="student-table" class="stripe mt-10 dataTable no-footer" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Email</th>
+                    <th>Image</th>
+                    <th>Birthday</th> 
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+	</div>
+
+</div>
+
+<%- partial('createModal') %>
+<%- partial('editModal') %>
+<%- partial('deleteModal') %>
+<%- partial('viewModal') %>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+
+    $('.birthday-group').datetimepicker({ format : "YYYY/MM/DD"});
+
+	$(".wrapper-table").ManageTable({
+        wrapperClass: '.wrapper-table',
+        tableClass: '#student-table',
+        object: 'student',
+        ajaxRequest: {
+            getList:    '/student/getStudentList',
+            save:       '/student/saveStudent',
+            edit:       '/student/editStudent',
+            update:     '/student/updateStudent',
+            delete:     '/student/deleteStudent',
+            view:       '/student/viewStudent',
+            upload:     '/student/media/upload'
+        },
+        table: {
+            columns: [
+                {'data' : 'first_name'},
+                {'data' : 'last_name'},
+                {'data' : 'email'},
+                {'data' : 'image'},
+                {'data' : 'birthday'},
+                {'data' : 'id'},
+            ],
+            columnDefs : [
+                {
+                    targets: -1,
+                    orderable: false,
+                    render: function(id) {
+                        var template = 
+                            '<div>'
+                                +'<a href="javascript:void(0)" class="view-modal-student-button action"  id="'+ id +'">View</a>'
+                                +'\n'
+                                +'<a href="javascript:void(0)" class="edit-modal-student-button action"  id="'+ id +'">Edit</a>'
+                                +'\n'
+                                +'<a href="javascript:void(0)" class="delete-modal-student-button action" id="'+ id +'">Delete</a>'
+                            +'</div>'
+
+                        return template;
+                    }
+                }
+            ]
+        },
+        modal: {
+            createModal: '#create-student-modal',
+            editModal: '#edit-student-modal',
+            deleteModal: '#delete-student-modal',
+            viewModal: '#view-student-modal'
+        },
+        action: {
+            createModalButton : '.create-modal-student-button',
+            editModalButton : '.edit-modal-student-button',
+            viewModalButton : '.view-modal-student-button',
+            deleteModalButton : '.delete-modal-student-button',
+        },
+    })
+})
+</script>

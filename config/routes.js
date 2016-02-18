@@ -34,7 +34,15 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  }
+  },
+
+  'POST /student/getStudentList' : 'StudentController.getStudentList',
+  'POST /student/createStudent' : 'StudentController.saveStudent',
+  'POST /student/saveStudent' : 'StudentController.saveStudent',
+  'POST /student/editStudent' : 'StudentController.saveStudent',
+  'POST /student/updateStudent' : 'StudentController.saveStudent',
+  'POST /student/deleteStudent' : 'StudentController.deleteStudent'
+
 
   /***************************************************************************
   *                                                                          *
