@@ -164,49 +164,49 @@
 		},
 
 		// Send ajax update object
-		updateProcess: function() {
-			// var self = e.data.self;
-			// var form = $(self.options.modal.editModal).find('.edit-form'); 
+		updateProcess: function(e) {
+			var self = e.data.self;
+			var form = $(self.options.modal.editModal).find('.edit-form'); 
 			
-			// $.ajax({
-			// 	url: self.options.ajaxRequest.update,
-			// 	type: 'POST',
-			// 	data: form.serialize(),
-			// 	beforeSend: function() {
-			// 		$(self.options.modal.editModal).find('.modal-content').addClass('ajax-load');
-			// 	},
-			// 	success: function(res) {
-			// 		// Clear all error
-			// 		form.find(".error-msg").text('');
+			$.ajax({
+				url: self.options.ajaxRequest.update,
+				type: 'POST',
+				data: form.serialize(),
+				beforeSend: function() {
+					$(self.options.modal.editModal).find('.modal-content').addClass('ajax-load');
+				},
+				success: function(res) {
+					// Clear all error
+					form.find(".error-msg").text('');
 
-			// 		if (res.status === 1) {
-			// 			$(self.options.modal.editModal).modal('hide');
-			// 			self.Table.ajax.reload(null, false);
-			// 		}
+					if (res.status === 1) {
+						$(self.options.modal.editModal).modal('hide');
+						self.Table.ajax.reload(null, false);
+					}
 
-			// 		if (res.status === 0) {
-			// 			if (res.hasOwnProperty('errors')) {
-			// 				var errors = res.errors
-			// 				for (var key in errors) {
-			// 					form.find("." + key + '-error').text(errors[key][0].message);
-			// 				}
-			// 			}
+					if (res.status === 0) {
+						if (res.hasOwnProperty('errors')) {
+							var errors = res.errors
+							for (var key in errors) {
+								form.find("." + key + '-error').text(errors[key][0].message);
+							}
+						}
 
-			// 			if (res.hasOwnProperty('message')) {
-			// 				$(self.options.modal.editModal).modal('hide');
-			// 				// Show message
+						if (res.hasOwnProperty('message')) {
+							$(self.options.modal.editModal).modal('hide');
+							// Show message
 
-			// 			}
-			// 			// Focus input error
-			// 			self._focusErrorInput(form);
+						}
+						// Focus input error
+						self._focusErrorInput(form);
 						
-			// 		}
-			// 	},
-			// 	complete: function() {
-			// 		$(self.options.modal.editModal).find('.modal-content').removeClass('ajax-load');	
+					}
+				},
+				complete: function() {
+					$(self.options.modal.editModal).find('.modal-content').removeClass('ajax-load');	
 
-			// 	}
-			// })
+				}
+			})
 		},
 
 		// Send ajax view object
@@ -245,15 +245,14 @@
 				
 				switch(selectEle.prop('nodeName')) {
 					case 'INPUT':
-						if (selectEle.attr('type') == 'text') {
+						if (selectEle.attr('type') == 'text' || selectEle.attr('type') == 'hidden') {
 							selectEle.val(value);
 						} 
 
 						if (selectEle.attr('type') == 'radio') {
 							selectEle.each(function() {
 								if ($(this).val() == value) {
-									console.log($(this).val())
-									$(this).attr("checked", 'checked');
+									$(this).prop("checked", 'checked');
 								}
 							})
 						}

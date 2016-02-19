@@ -70,6 +70,28 @@ module.exports = {
 			.catch(function() {
 
 			})
-	}
+	},
+	updateStudent: function(req, res) {
+		var params = req.params.all();
+		Student.update({id: params.id}, {
+			first_name: params.first_name.trim(),
+			last_name: params.last_name.trim(), 
+			birthday: params.birthday, 
+			gender: params.gender,
+			email: params.email,
+			image: params.image,
+			status: params.status
+		})
+		.then(function(student){
+			return res.json({status: 1, message: 'Update student successfully'});
+		})	
+		.catch(function(err) {
+			if (err.ValidationError) {
+				var errorBag = Helper.validate(err.ValidationError, Student.validationMessages);
+				return res.json({status: 0, errors: errorBag});
+			}
+			return res.json({status: 0, message: 'Server Error'});
+		})
+	},
 };
 
