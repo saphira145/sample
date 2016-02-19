@@ -20,7 +20,7 @@
 
 		buildManageTable: function() {
 			var self = this;
-			var Table = $(self.options.wrapperClass).find(self.options.tableClass).DataTable({
+			self.Table = $(self.options.wrapperClass).find(self.options.tableClass).DataTable({
 				serverSide: true,
 				processing: true,
 				ajax: {
@@ -43,20 +43,64 @@
 
 			$('body').on('click', self.options.modal.createModal + ' #save', {self: self}, self.saveProcess)
 			$('body').on('click', self.options.modal.editModal + ' #update', {self: self}, self.updateProcess)
-			$('body').on('click', self.options.modal.vieweModal + ' #save', {self: self}, self.viewProcess)
-			$('body').on('click', self.options.modal.createModal + ' #save', {self: self}, self.deleteProcess)
+			// $('body').on('click', self.options.modal.vieweModal + ' #save', {self: self}, self.viewProcess)
+			$('body').on('click', self.options.modal.createModal + ' #delete', {self: self}, self.deleteProcess)
 		},
 
 		// Open create modal
 		openCreateModal: function(e) {
 			var self = e.data.self
+			var form = $(self.options.modal.createModal).find('.create-form');
+			// Show modal
 			$(self.options.modal.createModal).modal('show');
+			// Clear all error and input value
+			self._clearUpForm(form);
 		},
 
-		// Open create modal
+		// Open edit modal
 		openEditModal: function(e) {
-			var self = e.data.self
+			var self = e.data.self;
+			var id = $(this).attr('id');
+			var form = $(self.options.modal.editModal).find('.edit-form');
+
 			$(self.options.modal.editModal).modal('show');
+
+			$.ajax({
+				url: self.options.ajaxRequest.edit,
+				type: 'POST',
+				data : {
+					id: id
+				},
+				beforeSend: function() {
+					$(self.options.modal.editModal).find('.modal-content').addClass('ajax-load');
+					self._clearUpForm(form);
+				},
+				success: function(res) {
+
+					if (res.status === 1) {
+
+						if (res.hasOwnProperty('record')) {
+							self._fillUpRecord(res.record, form);
+						}
+
+						if (res.hasOwnProperty('extraData')) {
+							self._fillUpExtraData(res.extraData, form);
+						}
+					}
+
+					if (res.status === 0) {
+						
+					}
+				},
+				complete: function() {
+					$(self.options.modal.editModal).find('.modal-content').removeClass('ajax-load');	
+
+				},
+				error: function() {
+					$(self.options.modal.editModal).modal('hide');			
+					// Show message		
+				}
+			})
 		},
 
 		// Open create modal
@@ -74,26 +118,95 @@
 		// Send ajax save object
 		saveProcess: function(e) {
 			var self = e.data.self;
-			console.log($(self.options.createModal).find('.create-form').serialize())
+			var form = $(self.options.modal.createModal).find('.create-form'); 
+			
 			$.ajax({
 				url: self.options.ajaxRequest.save,
 				type: 'POST',
-				data: $(self.options.createModal).find('.create-form').serialize(),
+				data: form.serialize(),
 				beforeSend: function() {
-					$(self.options.createModal).addClass('ajax-load');
+					$(self.options.modal.createModal).find('.modal-content').addClass('ajax-load');
 				},
 				success: function(res) {
+					// Clear all error
+					form.find(".error-msg").text('');
 
+					if (res.status === 1) {
+						$(self.options.modal.createModal).modal('hide');
+						self.Table.ajax.reload(null, false);
+					}
+
+					if (res.status === 0) {
+						if (res.hasOwnProperty('errors')) {
+							var errors = res.errors
+							for (var key in errors) {
+								form.find("." + key + '-error').text(errors[key][0].message);
+							}
+						}
+
+						if (res.hasOwnProperty('message')) {
+							$(self.options.modal.createModal).modal('hide');
+							// Show message
+
+						}
+						// Focus input error
+						self._focusErrorInput(form);
+						
+					}
 				},
 				complete: function() {
-					$(self.options.createModal).removeClass('ajax-load');	
+					$(self.options.modal.createModal).find('.modal-content').removeClass('ajax-load');	
+				},
+				error: function() {
+					$(self.options.modal.createModal).modal('hide');
 				}
 			})
 		},
 
 		// Send ajax update object
 		updateProcess: function() {
+			// var self = e.data.self;
+			// var form = $(self.options.modal.editModal).find('.edit-form'); 
+			
+			// $.ajax({
+			// 	url: self.options.ajaxRequest.update,
+			// 	type: 'POST',
+			// 	data: form.serialize(),
+			// 	beforeSend: function() {
+			// 		$(self.options.modal.editModal).find('.modal-content').addClass('ajax-load');
+			// 	},
+			// 	success: function(res) {
+			// 		// Clear all error
+			// 		form.find(".error-msg").text('');
 
+			// 		if (res.status === 1) {
+			// 			$(self.options.modal.editModal).modal('hide');
+			// 			self.Table.ajax.reload(null, false);
+			// 		}
+
+			// 		if (res.status === 0) {
+			// 			if (res.hasOwnProperty('errors')) {
+			// 				var errors = res.errors
+			// 				for (var key in errors) {
+			// 					form.find("." + key + '-error').text(errors[key][0].message);
+			// 				}
+			// 			}
+
+			// 			if (res.hasOwnProperty('message')) {
+			// 				$(self.options.modal.editModal).modal('hide');
+			// 				// Show message
+
+			// 			}
+			// 			// Focus input error
+			// 			self._focusErrorInput(form);
+						
+			// 		}
+			// 	},
+			// 	complete: function() {
+			// 		$(self.options.modal.editModal).find('.modal-content').removeClass('ajax-load');	
+
+			// 	}
+			// })
 		},
 
 		// Send ajax view object
@@ -103,6 +216,66 @@
 
 		// Send ajax delete object
 		deleteProcess: function() {
+
+		},
+		_clearUpForm: function(form) {
+			
+			form.find('.error-msg').text('');
+			form.find('input[type=text]').val('');
+			form.find('textarea').text('');
+			form.find('select').each(function() {
+				$(this).val($(this).find("option:first").val());
+			});
+			form.find('input[type=radio]').each(function() {
+				$(this).attr('checked', false);
+			});
+		},
+		_focusErrorInput: function(form) {
+			form.find("input.required").each(function() {
+				if ($(this).val().trim() === '') {
+					$(this).focus();
+					return false;
+				}
+			})
+		},
+
+		_fillUpRecord: function(record, form) {
+			$.each(record, function(key, value) {
+				var selectEle = form.find('[name=' + key + ']');
+				
+				switch(selectEle.prop('nodeName')) {
+					case 'INPUT':
+						if (selectEle.attr('type') == 'text') {
+							selectEle.val(value);
+						} 
+
+						if (selectEle.attr('type') == 'radio') {
+							selectEle.each(function() {
+								if ($(this).val() == value) {
+									console.log($(this).val())
+									$(this).attr("checked", 'checked');
+								}
+							})
+						}
+						break;
+					case 'TEXTAREA':
+						selectEle.text(value);
+						break;
+					case 'SELECT' :
+						selectEle.val(value);
+						break;
+					case 'undefined':
+					default:
+						return true;
+				}
+				
+				if (key === 'image') {
+					$(".image-preview").css({'background-image': 'url('+ value +')'});
+				}
+			})
+		},
+
+		_fillUpExtraData: function(data, form) {
 
 		}
 

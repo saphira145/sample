@@ -22,19 +22,51 @@ module.exports = {
 			type: 'string',
 			required: true
 		},
+        gender: {
+            type: 'integer',
+            required: true
+        },
 		email: {
-			type: 'string',
-			email: true
+			type: 'email',
+            required: true
 		},
 		image: {
 			type: 'string',
-			required: true
+            // required: true
 		},
 		birthday: {
 			type: 'datetime',
 			required: true	
-		}	
+		},
+        status: {
+            type: 'integer',
+            required: true
+        }	
 	},
+    validationMessages: {
+        first_name: {
+            required: 'Fist name is required'
+        },
+        last_name: {
+            required: 'Last name is required'
+        },
+        email: {
+            required: 'Email is required',
+            email: 'Must be email format'
+        },
+        gender :{
+            required: 'Must choose gender',
+            integer: 'Must choose gender'
+        },
+        birthday: {
+            required: 'Birthday is required',
+            datetime: 'Must be is date type'
+        },
+        status: {
+            integer: 'Status is required',
+            required: 'Status is required'
+        }
+    },
 
 	getStudentList: function(sortOrder, offset, limit, search, customWhere) {
 

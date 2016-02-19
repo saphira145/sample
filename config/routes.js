@@ -37,10 +37,10 @@ module.exports.routes = {
   },
 
   'POST /student/getStudentList' : 'StudentController.getStudentList',
-  'POST /student/createStudent' : 'StudentController.saveStudent',
+  'POST /student/createStudent' : 'StudentController.createStudent',
   'POST /student/saveStudent' : 'StudentController.saveStudent',
-  'POST /student/editStudent' : 'StudentController.saveStudent',
-  'POST /student/updateStudent' : 'StudentController.saveStudent',
+  'POST /student/editStudent' : 'StudentController.editStudent',
+  'POST /student/updateStudent' : 'StudentController.udpateStudent',
   'POST /student/deleteStudent' : 'StudentController.deleteStudent'
 
 

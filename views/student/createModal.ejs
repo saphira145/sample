@@ -11,7 +11,7 @@
 		<div class="modal-body">
 			<form class="form-horizontal create-form">
 				<div class="form-group">
-					<label class="form-label col-xs-3">First name:</label>
+					<label class="form-label col-xs-3 required">First name:</label>
 					<div class="col-xs-9">
 						<input type="text" class="form-control required" name="first_name" id="first_name" >
 						<p class="error-msg first_name-error"></p>
@@ -19,32 +19,39 @@
 				</div>
 
 				<div class="form-group">
-					<label class="form-label col-xs-3">Last name:</label>
+					<label class="form-label col-xs-3 required">Last name:</label>
 					<div class="col-xs-9">
 						<input type="text" class="form-control required" name="last_name" id="last_name" >
 						<p class="error-msg last_name-error"></p>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="form-label col-xs-3">Birthday:</label>
+					<label class="form-label col-xs-3 required">Email:</label>
+					<div class="col-xs-9">
+						<input type="text" class="form-control required" name="email" id="email" >
+						<p class="error-msg email-error"></p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="form-label col-xs-3 required">Birthday:</label>
 					<div class="col-xs-9">
 						<div class='input-group date birthday-group' id='birthday-group'>
                             <input type='text' class="form-control" id="birthday" name="birthday" placeholder="YYYY/MM/DD"/>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <p class="error-msg end_date-error"></p>
+                        <p class="error-msg birthday-error"></p>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="form-label col-xs-3">Gender:</label>
+					<label class="form-label col-xs-3 required">Gender:</label>
 					<div class="col-xs-9">
-						<label class="radio-inline"><input type="radio" name="gender">Male</label>
-						<label class="radio-inline"><input type="radio" name="gender">Female</label>
+						<label class="radio-inline"><input type="radio" name="gender" value="1">Male</label>
+						<label class="radio-inline"><input type="radio" name="gender" value="0">Female</label>
 						<p class="error-msg gender-error"></p>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="form-label col-xs-3">Photo:</label>
+					<label class="form-label col-xs-3 required">Photo:</label>
 					<input name="image" type="hidden" id="image">
 					<div class="col-xs-9">
 						<div class="row">
@@ -59,6 +66,15 @@
 							</div>
 						</div>
 						<p class="error error-msg image-error"></p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="form-label col-xs-3 required">Status:</label>
+					<div class="col-xs-9">
+						<select class="form-control status" id="status" name="status">
+							<option value="1">Active</option>
+							<option value="0">Deactive</option>
+						</select>
 					</div>
 				</div>
 			</form>

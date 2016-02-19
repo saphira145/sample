@@ -38,7 +38,38 @@ module.exports = {
 	},
 
 	saveStudent: function(req, res) {
-		return res.json({});
+		var params = req.params.all();
+		Student.create({
+			first_name: params.first_name.trim(),
+			last_name: params.last_name.trim(), 
+			birthday: params.birthday, 
+			gender: params.gender,
+			email: params.email,
+			image: params.image,
+			status: params.status
+		})
+		.then(function(student){
+			return res.json({status: 1, message: 'Save student successfully'});
+		})	
+		.catch(function(err) {
+			if (err.ValidationError) {
+				var errorBag = Helper.validate(err.ValidationError, Student.validationMessages);
+				return res.json({status: 0, errors: errorBag});
+			}
+			return res.json({status: 0, message: 'Server Error'});
+		})
+	},
+	editStudent: function(req, res) {
+		var params = req.params.all();
+		var status = ['Active', 'Deactive'];
+
+		Student.findOne({id: params.id})
+			.then(function(student) {
+				return res.json({status: 1, record: student, extraData : {status: status}})
+			})
+			.catch(function() {
+
+			})
 	}
 };
 
