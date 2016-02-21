@@ -37,6 +37,13 @@ module.exports = {
 		})
 	},
 
+	createStudent: function(req, res) {
+		var status = [{id: 1, text: 'Active'}, {id: 0, text: 'Deactive'}];
+		var gender = [{id: 0, text: 'Female'}, {id: 1, text: 'Male'}];
+
+		return  res.json({status: 1, extraData: {statusSelection: status, genderSelection: gender}});
+	},
+
 	saveStudent: function(req, res) {
 		var params = req.params.all();
 		Student.create({
@@ -61,11 +68,12 @@ module.exports = {
 	},
 	editStudent: function(req, res) {
 		var params = req.params.all();
-		var status = ['Active', 'Deactive'];
+		var status = [{id: 1, text: 'Active'}, {id: 0, text: 'Deactive'}];
+		var gender = [{id: 0, text: 'Female'}, {id: 1, text: 'Male'}];
 
 		Student.findOne({id: params.id})
 			.then(function(student) {
-				return res.json({status: 1, record: student, extraData : {status: status}})
+				return res.json({status: 1, record: student, extraData : {statusSelection: status, genderSelection: gender}});
 			})
 			.catch(function() {
 

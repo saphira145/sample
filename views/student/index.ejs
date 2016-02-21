@@ -20,6 +20,14 @@
 
 </div>
 
+<script type="x-tmpl-mustache" id="action-template">
+    <div>
+        <a href="javascript:void(0)" class="view-modal-student-button action"  id="{{id}}">View</a>
+        <a href="javascript:void(0)" class="edit-modal-student-button action"  id="{{id}}">Edit</a>
+        <a href="javascript:void(0)" class="delete-modal-student-button action" id="{{id}}">Delete</a>
+    </div>
+</script>
+
 <%- partial('createModal') %>
 <%- partial('editModal') %>
 <%- partial('deleteModal') %>
@@ -38,6 +46,7 @@ $(document).ready(function() {
         object: 'student',
         ajaxRequest: {
             getList:    '/student/getStudentList',
+            create:     '/student/createStudent',
             save:       '/student/saveStudent',
             edit:       '/student/editStudent',
             update:     '/student/updateStudent',
@@ -59,16 +68,10 @@ $(document).ready(function() {
                     targets: -1,
                     orderable: false,
                     render: function(id) {
-                        var template = 
-                            '<div>'
-                                +'<a href="javascript:void(0)" class="view-modal-student-button action"  id="'+ id +'">View</a>'
-                                +'\n'
-                                +'<a href="javascript:void(0)" class="edit-modal-student-button action"  id="'+ id +'">Edit</a>'
-                                +'\n'
-                                +'<a href="javascript:void(0)" class="delete-modal-student-button action" id="'+ id +'">Delete</a>'
-                            +'</div>'
+                        var template = $("#action-template").html();
+                        var html = Mustache.render(template, {id: id});
 
-                        return template;
+                        return html;
                     }
                 }
             ]
@@ -85,6 +88,33 @@ $(document).ready(function() {
             viewModalButton : '.view-modal-student-button',
             deleteModalButton : '.delete-modal-student-button',
         },
+
+        _fillUpEditForm: function(record, extraData) {
+            var template = $("#edit-form-template").html();
+            record.statusSelection = extraData.statusSelection;
+            record.genderSelection = extraData.genderSelection;
+
+            var statusSelection = record.statusSelection;
+            var genderSelection = record.genderSelection;
+
+            for (var key in statusSelection) {
+                if (statusSelection[key].id == record.status) statusSelection[key].selected = 'selected';
+            }
+
+            for (var key in genderSelection) {
+                if (genderSelection[key].id == record.gender) genderSelection[key].checked = 'checked';
+            }
+            
+            var html = Mustache.render(template, record);
+
+            return html
+        },
+        _fillUpCreateForm: function(extraData) {
+            var template = $("#create-form-template").html();
+            var html = Mustache.render(template, extraData);
+
+            return html
+        }
     })
 })
 </script>
