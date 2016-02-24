@@ -41,7 +41,11 @@ module.exports.routes = {
   'POST /student/saveStudent' : 'StudentController.saveStudent',
   'POST /student/editStudent' : 'StudentController.editStudent',
   'POST /student/updateStudent' : 'StudentController.udpateStudent',
-  'POST /student/deleteStudent' : 'StudentController.deleteStudent'
+  'POST /student/deleteStudent' : 'StudentController.deleteStudent',
+
+  // Authenticate
+
+  'GET /login' : 'Authenticate.getLogin'
 
 
   /***************************************************************************
