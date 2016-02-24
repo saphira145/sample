@@ -108,6 +108,7 @@
 				},
 				beforeSend: function() {
 					$(self.options.modal.editModal).find('.modal-content').addClass('ajax-load');
+					self._clearUpInput(form);
 				},
 				success: function(res) {
 
@@ -257,14 +258,18 @@
 		deleteProcess: function() {
 
 		},
+
+		_clearUpInput: function(form) {
+			form.find('input').val('');
+		},
 		
 		_focusErrorInput: function(form) {
-			form.find("input.required").each(function() {
-				if ($(this).val().trim() === '') {
-					$(this).focus();
-					return false;
-				}
-			})
+			form.find("input.required").each(function () {
+		        if ($(this).closest('.form-group').find('.error-msg').text() != '') {
+		            $(this).focus();
+		            return false;
+		        }
+		    })
 		},
 
 	}
@@ -278,33 +283,5 @@
 			
 		})
 	}	
-
-	$.fn.ManageTable.options = {
-		wrapperClass: '.wrapper-table',
-		object: 'object',
-		ajaxRequest: {
-			getList: 	'/getList',
-			save: 		'/save',
-			edit: 		'/edit',
-			update: 	'/update',
-			delete: 	'/delete',
-			view: 		'/view',
-			upload: 	'/media/upload'
-		},
-	    modal: {
-	    	createModal: '#create-modal',
-	    	editModal: '#edit-modal',
-	    	deleteModal: '#delete-modal',
-	    	viewModal: '#view-modal',
-	    },
-	    action: {
-	    	createModalButton : '.create-modal-button',
-	    	editModalButton : '.edit-modal-button',
-	    	viewModalButton : '.view-modal-button',
-	    	deleteModalButton : '.delete-modal-button',
-	    },
-		dateFormat: 'YYYY-MM-DD',
-		uploadClass: 'upload'
-	}
 
 })(jQuery, document, window);

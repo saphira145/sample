@@ -37,10 +37,7 @@
 
 $(document).ready(function() {
 
-
-    $('.birthday-group').datetimepicker({ format : "YYYY/MM/DD"});
-
-	$(".wrapper-table").ManageTable({
+    var manageTableConfig = {
         wrapperClass: '.wrapper-table',
         tableClass: '#student-table',
         object: 'student',
@@ -115,6 +112,11 @@ $(document).ready(function() {
 
             return html
         }
-    })
+    }
+
+
+    $('.birthday-group').datetimepicker({ format : "YYYY/MM/DD"});
+    // 
+	$(".wrapper-table").ManageTable(manageTableConfig)
 })
 </script>
