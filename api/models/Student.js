@@ -30,13 +30,17 @@ module.exports = {
 			type: 'email',
             required: true
 		},
+        password: {
+            type: 'string',
+            required: true
+        },
 		image: {
 			type: 'string',
             // required: true
 		},
 		birthday: {
 			type: 'datetime',
-			required: true	
+			// required: true	
 		},
         status: {
             type: 'integer',
@@ -65,7 +69,10 @@ module.exports = {
         status: {
             integer: 'Status is required',
             required: 'Status is required'
-        }
+        },
+        password: {
+            required: 'Password is required'
+        },
     },
 
 	getStudentList: function(sortOrder, offset, limit, search, customWhere) {
@@ -139,5 +146,46 @@ module.exports = {
     getColumn: function() {
         return ['first_name', 'last_name', 'email', 'image', 'birthday'];
     },
+    beforeCreate: function(student, next) {
+        var errors = {};
+
+        Student.checkEmailUnique(student.email)
+            .then(function(result) {    
+                if (result) {
+                    errors.validate = {email: [{rule: 'unique', message: 'Email already exists'}] };
+                    next(errors);
+                }
+                next();
+            })
+            .catch(function(err) {
+                next(err);
+            })
+    },
+    checkEmailUnique: function(email, idCheck) {
+        var Promise = Q.promise(function(resolve, reject) {
+            if (idCheck) {
+                Student.findOne({email: email, id: {'!' : idCheck} })
+                    .then(function(student) {   
+                        (student) ? resolve(true): resolve(false);
+                    })
+                    .catch(function(err) {
+                        reject(err);
+                    })
+            }
+
+            if (!idCheck) {
+                Student.findOne({email: email})
+                    .then(function(student) {
+
+                        (student) ? resolve(true): resolve(false);
+                    })
+                    .catch(function(err) {
+                        reject(err)
+                    })
+            }
+        })
+
+        return Promise;
+    }
 };
 

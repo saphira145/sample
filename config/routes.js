@@ -45,7 +45,9 @@ module.exports.routes = {
 
   // Authenticate
 
-  'GET /login' : 'Authenticate.getLogin'
+  'GET /login' : 'Authenticate.getLogin',
+  'GET /register' : 'Authenticate.register',
+  'POST /postRegister' : 'Authenticate.postRegister'
 
 
   /***************************************************************************

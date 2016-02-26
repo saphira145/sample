@@ -44,6 +44,7 @@
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/moment.min.js"></script>
     <script src="/js/dependencies/bootstrap-datetimepicker.min.js"></script>
+    <script src="/js/dependencies/jquery.form.min.js"></script>
 
   </head>
 
@@ -75,8 +76,8 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                        <li><a href="">Login</a></li>
-                        <li><a href="">Register</a></li>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -84,7 +85,7 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href=""><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                                <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                             </ul>
                         </li>
                 </ul>
@@ -144,7 +145,7 @@
 
     -->
     
-    
+    <script type="text/javascript" src="/js/authenticate.js"></script>
     
   </body>
 
