@@ -6,9 +6,9 @@
  */
 
 module.exports = {
-	index: function(req, res) {
+	getLogin: function(req, res) {
 		res.locals.layout = 'loginLayout';
-		return res.view();
+		return res.view('authenticate/login');
 	}
 };
 
